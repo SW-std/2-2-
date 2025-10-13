@@ -8,7 +8,8 @@
 using namespace std;
 
 // 클라이언트 처리 스레드 함수
-void clientHandler(SOCKET client) {
+DWORD WINAPI clientHandler(LPVOID arg) {
+    SOCKET client = (SOCKET)arg; // 전달받은 인자를 SOCKET으로 캐스팅
     char buf[1024];
     int recvLen;
 
@@ -18,12 +19,15 @@ void clientHandler(SOCKET client) {
         recvLen = recv(client, buf, sizeof(buf), 0);
         if (recvLen <= 0) break; // 연결 종료 또는 오류 발생
 
-        send(client, buf, recvLen, 0); // Echo 응답
+        send(client, buf, recvLen, 0); // 받은 데이터를 그대로 클라이언트에 전송 (Echo)
     }
 
     closesocket(client);
     cout << "[-] 클라이언트 연결 종료" << endl;
+
+    return 0;
 }
+
 
 int main() {
     WSADATA wsa;
@@ -79,3 +83,4 @@ int main() {
     WSACleanup();
     return 0;
 }
+
