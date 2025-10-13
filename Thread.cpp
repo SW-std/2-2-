@@ -1,7 +1,6 @@
-﻿#include <winsock2.h>
+#include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iostream>
-#include <thread>
 
 #pragma comment(lib, "ws2_32.lib")  // WinSock2 라이브러리 연결
 
@@ -9,7 +8,7 @@ using namespace std;
 
 // 클라이언트 처리 스레드 함수
 DWORD WINAPI clientHandler(LPVOID arg) {
-    SOCKET client = (SOCKET*)arg; // 전달받은 인자를 SOCKET으로 캐스팅
+    SOCKET client = (SOCKET)arg; // 전달받은 인자를 SOCKET으로 캐스팅
     char buf[1024];
     int recvLen;
 
@@ -27,7 +26,6 @@ DWORD WINAPI clientHandler(LPVOID arg) {
 
     return 0;
 }
-
 
 int main() {
     WSADATA wsa;
@@ -63,10 +61,16 @@ int main() {
     }
 
     // 5. 리슨
-    listen(server, SOMAXCONN);
+    if (listen(server, SOMAXCONN) == SOCKET_ERROR) {
+        cerr << "리슨 실패" << endl;
+        closesocket(server);
+        WSACleanup();
+        return 1;
+    }
+
     cout << "서버가 포트 9000에서 실행 중..." << endl;
 
-    // 6. 클라이언트 연결 수락
+    // 6. 클라이언트 연결 수락 및 스레드 생성
     while (true) {
         client = accept(server, (sockaddr*)&clientAddr, &clientSize);
         if (client == INVALID_SOCKET) {
@@ -74,8 +78,22 @@ int main() {
             continue;
         }
 
-        // 클라이언트당 스레드 생성
-        thread(clientHandler, client).detach();
+        // 클라이언트당 WinAPI 스레드 생성
+        HANDLE hThread = CreateThread(
+            NULL,                // 보안 속성
+            0,                   // 스택 크기 (기본)
+            clientHandler,       // 스레드 함수
+            (LPVOID)client,      // 인자
+            0,                   // 생성 옵션
+            NULL                 // 스레드 ID
+        );
+
+        if (hThread == NULL) {
+            cerr << "스레드 생성 실패" << endl;
+            closesocket(client);
+        } else {
+            CloseHandle(hThread); // 핸들은 닫아도 스레드는 계속 실행됨
+        }
     }
 
     // 7. 종료 처리
@@ -83,5 +101,3 @@ int main() {
     WSACleanup();
     return 0;
 }
-
-
