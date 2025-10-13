@@ -9,7 +9,7 @@ using namespace std;
 
 // 클라이언트 처리 스레드 함수
 DWORD WINAPI clientHandler(LPVOID arg) {
-    SOCKET client = (SOCKET)arg; // 전달받은 인자를 SOCKET으로 캐스팅
+    SOCKET client = (SOCKET*)arg; // 전달받은 인자를 SOCKET으로 캐스팅
     char buf[1024];
     int recvLen;
 
@@ -83,4 +83,5 @@ int main() {
     WSACleanup();
     return 0;
 }
+
 
