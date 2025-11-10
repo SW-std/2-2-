@@ -29,7 +29,7 @@ int main() {
 
     std::cout << "[클라이언트] 서버에 연결되었습니다.\n";
 
-    // 1️⃣ 먼저 파일 크기 받기
+    // 먼저 파일 크기 받기
     std::streamsize fileSize = 0;
     int received = recv(clientSock, reinterpret_cast<char*>(&fileSize), sizeof(fileSize), 0);
     if (received != sizeof(fileSize)) {
@@ -41,13 +41,13 @@ int main() {
 
     std::cout << "[클라이언트] 파일 크기: " << fileSize << " 바이트\n";
 
-    // 2️⃣ PNG 파일로 저장 (이제 txt 아님)
+    // PNG 파일로 저장 (이제 txt 아님)
     std::ofstream outFile("received.png", std::ios::binary);
 
     char buffer[1024];
     std::streamsize totalReceived = 0;
 
-    // 3️⃣ 정확히 fileSize만큼 수신
+    // 정확히 fileSize만큼 수신
     while (totalReceived < fileSize) {
         int bytesReceived = recv(clientSock, buffer, sizeof(buffer), 0);
         if (bytesReceived <= 0) break;
