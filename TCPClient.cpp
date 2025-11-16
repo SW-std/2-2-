@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <winsock2.h>
-#include <ws2tcpip.h> // inet_ptonÀ» À§ÇØ ÇÊ¿ä
+#include <ws2tcpip.h> // inet_ptonì„ ìœ„í•´ í•„ìš”
 #include <iostream>
 #include <string>
 
@@ -10,49 +10,48 @@
 #define SERVERPORT  9000
 #define BUFSIZE     512
 
-// ÆÄÀÏ ´Ù¿î·Îµå ·ÎÁ÷À» ÇÔ¼ö·Î ºĞ¸®ÇÏ¿© °¡µ¶¼º ³ôÀÓ
 void DownloadFile(SOCKET sock, const std::string& filename);
 
 int main()
 {
-    // 1. Winsock ÃÊ±âÈ­
+    // 1. Winsock ì´ˆê¸°í™”
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
-        printf("WSAStartup ½ÇÆĞ\n");
+        printf("WSAStartup ì‹¤íŒ¨\n");
         return 1;
     }
 
-    // 2. ¼ÒÄÏ »ı¼º
+    // 2. ì†Œì¼“ ìƒì„±
     SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock == INVALID_SOCKET) {
-        printf("socket »ı¼º ½ÇÆĞ: %d\n", WSAGetLastError());
+        printf("socket ìƒì„± ì‹¤íŒ¨: %d\n", WSAGetLastError());
         WSACleanup();
         return 1;
     }
 
-    // 3. ¼­¹ö ÁÖ¼Ò ¼³Á¤
+    // 3. ì„œë²„ ì£¼ì†Œ ì„¤ì •
     sockaddr_in serveraddr{};
     serveraddr.sin_family = AF_INET;
     serveraddr.sin_port = htons(SERVERPORT);
-    // inet_ptonÀº <ws2tcpip.h> ÇÊ¿ä
+    // inet_ptonì€ <ws2tcpip.h> í•„ìš”
     if (inet_pton(AF_INET, SERVERIP, &serveraddr.sin_addr) <= 0) {
-        printf("Àß¸øµÈ IP ÁÖ¼Ò\n");
+        printf("ì˜ëª»ëœ IP ì£¼ì†Œ\n");
         closesocket(sock);
         WSACleanup();
         return 1;
     }
 
-    // 4. ¿¬°á ½Ãµµ
+    // 4. ì—°ê²° ì‹œë„
     if (connect(sock, (sockaddr*)&serveraddr, sizeof(serveraddr)) == SOCKET_ERROR) {
-        printf("¿¬°á ½ÇÆĞ: %d\n", WSAGetLastError());
+        printf("ì—°ê²° ì‹¤íŒ¨: %d\n", WSAGetLastError());
         closesocket(sock);
         WSACleanup();
         return 1;
     }
-    printf("¼­¹ö¿¡ ¿¬°áµÇ¾ú½À´Ï´Ù. (IP: %s, Port: %d)\n", SERVERIP, SERVERPORT);
-    printf("»ç¿ë °¡´ÉÇÑ ¸í·É¾î: list, [ÆÄÀÏ¸í]\n\n");
+    printf("ì„œë²„ì— ì—°ê²°ë˜ì—ˆìŠµë‹ˆë‹¤. (IP: %s, Port: %d)\n", SERVERIP, SERVERPORT);
+    printf("ì‚¬ìš© ê°€ëŠ¥í•œ ëª…ë ¹ì–´: list, [íŒŒì¼ëª…]\n\n");
 
-    // 5. ¸ŞÀÎ ·çÇÁ
+    // 5. ë©”ì¸ ë£¨í”„
     while (1)
     {
         printf("> ");
@@ -61,45 +60,45 @@ int main()
 
         if (input.empty()) continue;
 
-        // ¿¬°á Á¾·á Ã³¸®
+        // ì—°ê²° ì¢…ë£Œ ì²˜ë¦¬
         if (input == "quit" || input == "exit") {
             send(sock, input.c_str(), input.size(), 0);
-            printf("Å¬¶óÀÌ¾ğÆ® Á¾·á.\n");
+            printf("í´ë¼ì´ì–¸íŠ¸ ì¢…ë£Œ.\n");
             break;
         }
 
-        // ¸í·É Àü¼Û
+        // ëª…ë ¹ ì „ì†¡
         send(sock, input.c_str(), input.size(), 0);
 
-        // ==== LIST ¿äÃ» Ã³¸® ====
+        // ==== LIST ìš”ì²­ ì²˜ë¦¬ ====
         if (input == "list")
         {
             char buf[BUFSIZE];
-            printf("\n=== ¼­¹ö ÆÄÀÏ ¸ñ·Ï ===\n");
+            printf("\n=== ì„œë²„ íŒŒì¼ ëª©ë¡ ===\n");
 
-            // ¼­¹ö°¡ º¸³»´Â "END" ¹®ÀÚ¿­±îÁö ¸ñ·ÏÀ» ¼ö½Å
+            // ì„œë²„ê°€ ë³´ë‚´ëŠ” "END" ë¬¸ìì—´ê¹Œì§€ ëª©ë¡ì„ ìˆ˜ì‹ 
             while (1)
             {
-                // ¸ñ·ÏÀº ÇÑ ÁÙ¾¿ ¼ö½ÅµÇ¹Ç·Î, BUFSIZE ¸¸Å­ ¹ŞÀ½
+                // ëª©ë¡ì€ í•œ ì¤„ì”© ìˆ˜ì‹ ë˜ë¯€ë¡œ, BUFSIZE ë§Œí¼ ë°›ìŒ
                 int retval = recv(sock, buf, BUFSIZE - 1, 0);
                 if (retval <= 0) {
-                    printf("¼­¹ö ¿¬°á ²÷±è.\n");
+                    printf("ì„œë²„ ì—°ê²° ëŠê¹€.\n");
                     goto cleanup;
                 }
-                buf[retval] = '\0'; // ³Î Á¾·á ¹®ÀÚ Ãß°¡
+                buf[retval] = '\0'; // ë„ ì¢…ë£Œ ë¬¸ì ì¶”ê°€
 
-                // ¼­¹ö°¡ ¸ñ·Ï Àü¼ÛÀ» ¿Ï·áÇß´Ù´Â ½ÅÈ£ ("END" °¡Á¤)
+                // ì„œë²„ê°€ ëª©ë¡ ì „ì†¡ì„ ì™„ë£Œí–ˆë‹¤ëŠ” ì‹ í˜¸ ("END" ê°€ì •)
                 if (strcmp(buf, "END") == 0)
                     break;
 
                 printf("%s\n", buf);
             }
             printf("======================\n\n");
-            // list ¿äÃ» Ã³¸®°¡ ³¡³µÀ¸¹Ç·Î, ´ÙÀ½ ¸í·ÉÀ» ¹Ş±â À§ÇØ ·çÇÁ ½ÃÀÛÀ¸·Î µ¹¾Æ°¨
+            // list ìš”ì²­ ì²˜ë¦¬ê°€ ëë‚¬ìœ¼ë¯€ë¡œ, ë‹¤ìŒ ëª…ë ¹ì„ ë°›ê¸° ìœ„í•´ ë£¨í”„ ì‹œì‘ìœ¼ë¡œ ëŒì•„ê°
             continue;
         }
 
-        // ==== ÆÄÀÏ ¿äÃ» (list ÀÌ¿ÜÀÇ ¸ğµç ÀÔ·Â) Ã³¸® ====
+        // íŒŒì¼ ìš”ì²­ (list ì´ì™¸ì˜ ëª¨ë“  ì…ë ¥) ì²˜ë¦¬
         DownloadFile(sock, input);
     }
 
@@ -110,65 +109,66 @@ cleanup:
 }
 
 
-// ÆÄÀÏÀ» ´Ù¿î·ÎµåÇÏ´Â ÇÔ¼ö
+// íŒŒì¼ì„ ë‹¤ìš´ë¡œë“œí•˜ëŠ” í•¨ìˆ˜
 void DownloadFile(SOCKET sock, const std::string& filename)
 {
     char buf[BUFSIZE];
 
-    // 1. ÆÄÀÏ Å©±â ¼ö½Å (¼­¹ö°¡ NOFILE ¶Ç´Â Å©±â¸¦ º¸³¿)
+    // 1. íŒŒì¼ í¬ê¸° ìˆ˜ì‹  (ì„œë²„ê°€ NOFILE ë˜ëŠ” í¬ê¸°ë¥¼ ë³´ëƒ„)
     int retval = recv(sock, buf, BUFSIZE - 1, 0);
     if (retval <= 0) {
-        printf("¼­¹ö ¿¬°á ²÷±è.\n");
+        printf("ì„œë²„ ì—°ê²° ëŠê¹€.\n");
         return;
     }
     buf[retval] = '\0';
 
-    // 2. ¼­¹ö°¡ ÆÄÀÏ ¾øÀ½ Ã³¸®
+    // 2. ì„œë²„ê°€ íŒŒì¼ ì—†ìŒ ì²˜ë¦¬
     if (strcmp(buf, "NOFILE") == 0) {
-        printf("[Å¬¶óÀÌ¾ğÆ®] ¼­¹ö¿¡ '%s' ÆÄÀÏ ¾øÀ½.\n\n", filename.c_str());
+        printf("[í´ë¼ì´ì–¸íŠ¸] ì„œë²„ì— '%s' íŒŒì¼ ì—†ìŒ.\n\n", filename.c_str());
         return;
     }
 
-    // 3. ÆÄÀÏ Å©±â º¯È¯ ¹× Ãâ·Â
+    // 3. íŒŒì¼ í¬ê¸° ë³€í™˜ ë° ì¶œë ¥
     int fileSize = atoi(buf);
     if (fileSize <= 0) {
-        printf("[Å¬¶óÀÌ¾ğÆ®] ¼­¹ö·ÎºÎÅÍ À¯È¿ÇÏÁö ¾ÊÀº ÆÄÀÏ Å©±â (%d) ¼ö½Å.\n\n", fileSize);
+        printf("[í´ë¼ì´ì–¸íŠ¸] ì„œë²„ë¡œë¶€í„° ìœ íš¨í•˜ì§€ ì•Šì€ íŒŒì¼ í¬ê¸° (%d) ìˆ˜ì‹ .\n\n", fileSize);
         return;
     }
-    printf("[Å¬¶óÀÌ¾ğÆ®] ÆÄÀÏ Å©±â: %d bytes\n", fileSize);
+    printf("[í´ë¼ì´ì–¸íŠ¸] íŒŒì¼ í¬ê¸°: %d bytes\n", fileSize);
 
-    // 4. ÆÄÀÏ ´Ù¿î·Îµå ¹× ÀúÀå
+    // 4. íŒŒì¼ ë‹¤ìš´ë¡œë“œ ë° ì €ì¥
     FILE* fp = NULL;
-    // ÀÌÁø ¸ğµå ('wb')·Î ÆÄÀÏ ¿­±â
+    // ì´ì§„ ëª¨ë“œ ('wb')ë¡œ íŒŒì¼ ì—´ê¸°
     if (fopen_s(&fp, filename.c_str(), "wb") != 0 || fp == NULL) {
-        printf("[Å¬¶óÀÌ¾ğÆ®] ·ÎÄÃ ÆÄÀÏ '%s' ¿­±â ½ÇÆĞ.\n", filename.c_str());
+        printf("[í´ë¼ì´ì–¸íŠ¸] ë¡œì»¬ íŒŒì¼ '%s' ì—´ê¸° ì‹¤íŒ¨.\n", filename.c_str());
         return;
     }
 
     int received = 0;
     while (received < fileSize)
     {
-        // ³²Àº Å©±â ¶Ç´Â BUFSIZE Áß ´õ ÀÛÀº Å©±â¸¸Å­ ¼ö½Å ¿äÃ»
+        // ë‚¨ì€ í¬ê¸° ë˜ëŠ” BUFSIZE ì¤‘ ë” ì‘ì€ í¬ê¸°ë§Œí¼ ìˆ˜ì‹  ìš”ì²­
         int receive_len = (fileSize - received) > BUFSIZE ? BUFSIZE : (fileSize - received);
         retval = recv(sock, buf, receive_len, 0);
 
         if (retval <= 0) {
-            printf("[Å¬¶óÀÌ¾ğÆ®] ÆÄÀÏ ¼ö½Å Áß ¿À·ù ¹ß»ı ¶Ç´Â ¼­¹ö ¿¬°á ²÷±è.\n");
+            printf("[í´ë¼ì´ì–¸íŠ¸] íŒŒì¼ ìˆ˜ì‹  ì¤‘ ì˜¤ë¥˜ ë°œìƒ ë˜ëŠ” ì„œë²„ ì—°ê²° ëŠê¹€.\n");
             break;
         }
 
-        // ¼ö½ÅµÈ µ¥ÀÌÅÍ¸¦ ÆÄÀÏ¿¡ ±â·Ï
+        // ìˆ˜ì‹ ëœ ë°ì´í„°ë¥¼ íŒŒì¼ì— ê¸°ë¡
         fwrite(buf, 1, retval, fp);
         received += retval;
     }
 
-    // 5. ¿Ï·á Ã³¸®
+    // 5. ì™„ë£Œ ì²˜ë¦¬
     fclose(fp);
 
     if (received == fileSize) {
-        printf("[Å¬¶óÀÌ¾ğÆ®] ÆÄÀÏ ÀúÀå ¿Ï·á: %s (%d/%d bytes)\n\n", filename.c_str(), received, fileSize);
+        printf("[í´ë¼ì´ì–¸íŠ¸] íŒŒì¼ ì €ì¥ ì™„ë£Œ: %s (%d/%d bytes)\n\n", filename.c_str(), received, fileSize);
     }
     else {
-        printf("[Å¬¶óÀÌ¾ğÆ®] ÆÄÀÏ ´Ù¿î·Îµå ºÒ¿ÏÀü: %s (%d/%d bytes)\n\n", filename.c_str(), received, fileSize);
+        printf("[í´ë¼ì´ì–¸íŠ¸] íŒŒì¼ ë‹¤ìš´ë¡œë“œ ë¶ˆì™„ì „: %s (%d/%d bytes)\n\n", filename.c_str(), received, fileSize);
     }
+
 }
