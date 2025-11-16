@@ -70,7 +70,7 @@ int main() {
             break;
         }
 
-        cmd[recvBytes] = '\0'; // ★ 널 종료 문자 추가
+        cmd[recvBytes] = '\0'; // 널 종료 문자 추가
         std::string input = cmd;
 
         // list 처리
@@ -79,7 +79,6 @@ int main() {
 
             for (auto& p : fs::directory_iterator(".")) {
                 if (p.is_regular_file()) {
-                    // 파일명 뒤에 개행 문자 추가
                     std::string name = p.path().filename().string() + "\n";
                     send(clientSock, name.c_str(), name.size(), 0);
                 }
@@ -93,8 +92,6 @@ int main() {
         }
         //파일 전송 처리
         std::string filename = input;
-        
-        // 경로 공격 방지 등을 위해 유효성 검사를 추가할 수 있습니다.
 
         std::ifstream file(filename, std::ios::binary);
 
@@ -113,7 +110,6 @@ int main() {
         std::string sizeStr = std::to_string(filesize);
         send(clientSock, sizeStr.c_str(), sizeStr.size(), 0);
         std::cout << "[서버] 파일 크기 전송 (" << filesize << " bytes): " << filename << "\n";
-
 
         // 파일 내용 전송
         std::cout << "[서버] 파일 내용 전송 시작: " << filename << "\n";
@@ -144,3 +140,4 @@ int main() {
     return 0;
 
 }
+
