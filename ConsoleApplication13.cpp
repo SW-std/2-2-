@@ -62,7 +62,7 @@ int main() {
     //  명령 처리 루프
     while (true) {
         char cmd[BUFSIZE] = { 0 };
-        // 버퍼 오버플로우 방지를 위해 BUFSIZE - 1만큼만 받습니다.
+        // 버퍼 오버플로우 방지를 위해 BUFSIZE - 1만큼만 받음
         int recvBytes = recv(clientSock, cmd, BUFSIZE - 1, 0);
 
         if (recvBytes <= 0) {
@@ -140,4 +140,5 @@ int main() {
     return 0;
 
 }
+
 
