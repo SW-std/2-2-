@@ -87,8 +87,8 @@ int main()
                 }
                 buf[retval] = '\0'; // 널 종료 문자 추가
 
-                // 서버가 목록 전송을 완료했다는 신호 ("END" 가정)
-                if (strcmp(buf, "END") == 0)
+                // 서버가 목록 전송을 완료했다는 신호
+                if (strncmp(buf, "END",3) == 0)
                     break;
 
                 printf("%s\n", buf);
