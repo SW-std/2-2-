@@ -88,45 +88,45 @@ using namespace std;
 //    return 0;
 //}
 //2번
-// int main() {
-//    map<int, int> freq;       // key: 입력 정수, value: 등장 횟수
-//    int n;
-//
-//    cout << "입력할 정수 개수: ";
-//    cin >> n;
-//
-//    cout << n << "개의 정수를 입력하세요:\n";
-//
-//    int x;
-//    for (int i = 0; i < n; i++) {
-//        cin >> x;
-//        freq[x]++;  // 같은 값이 나오면 자동으로 count 증가
-//    }
-//
-//    // 1. map의 멤버를 이용하여 총 입력 정수 개수 구하기
-//    int totalCount = 0;
-//    long long sum = 0;
-//
-//    for (auto& p : freq) {
-//        totalCount += p.second;   // 전체 입력 개수 = 모든 빈도수 합
-//        sum += (long long)p.first * p.second; // 평균 계산을 위한 합
-//    }
-//
-//    // 2. 평균 계산
-//    double avg = (double)sum / totalCount;
-//
-//    // 3. 출력
-//
-//    cout << "총 입력된 정수 개수: " << totalCount << endl;
-//    cout << "평균: " << avg << endl;
-//
-//    cout << "\n정수별 등장 횟수:\n";
-//    for (auto& p : freq) {
-//        cout << p.first << " : " << p.second << "개\n";
-//    }
-//
-//    return 0;
-//}
+ int main() {
+    map<int, int> freq;       // key: 입력 정수, value: 등장 횟수
+    int n;
+
+    cout << "입력할 정수 개수: ";
+    cin >> n;
+
+    cout << n << "개의 정수를 입력하세요:\n";
+
+    int x;
+    for (int i = 0; i < n; i++) {
+        cin >> x;
+        freq[x]++;  // 같은 값이 나오면 자동으로 count 증가
+    }
+
+    // 1. map의 멤버를 이용하여 총 입력 정수 개수 구하기
+    int totalCount = 0;
+    long long sum = 0;
+
+    for (auto& p : freq) {
+        totalCount += p.second;   // 전체 입력 개수 = 모든 빈도수 합
+        sum += (double)p.first * p.second; // 평균 계산을 위한 합
+    }
+
+    // 2. 평균 계산
+    double avg = (double)sum / totalCount;
+
+    // 3. 출력
+
+    cout << "총 입력된 정수 개수: " << totalCount << endl;
+    cout << "평균: " << avg << endl;
+
+    cout << "\n정수별 등장 횟수:\n";
+    for (auto& p : freq) {
+        cout << p.first << " : " << p.second << "개\n";
+    }
+
+    return 0;
+}
 ////1번
 //int average(const vector<int> &a) {
 //	int all = 0;
