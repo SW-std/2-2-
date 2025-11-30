@@ -1,28 +1,86 @@
-﻿// STL_problems.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
-//
-
 #include <iostream>
 #include<vector>
 #include<algorithm>
 #include<map>
 using namespace std;
 
+//3번
 int main() {
-	map<int, int> m;
-	int count = 0;
-	int a;
-	int b;
-	do{
-		cin >> a;
-		m[a];
-		cin >> b;
-		if (m[a] == m[b]) {
-			m[a]++;
-		}
-	} while (count < 10);
-	cout << m[a] << endl;
+    map<string, string> m;   // key: 이름, value: 전화번호
+    int n;
+
+    cout << "저장할 사람 수를 입력하세요: ";
+    cin >> n;
+
+    string name, number;
+
+    // 이름과 전화번호를 map에 저장
+    for (int i = 0; i < n; i++) {
+        cout << "\n이름 입력: ";
+        cin >> name;
+        cout << "전화번호 입력: ";
+        cin >> number;
+
+        m[name] = number;  // map은 key가 같으면 자동으로 덮어씀 이전의 정보는 저장되지않음
+    }
+
+    // 검색
+    cout << "\n검색할 이름을 입력하세요: ";
+    cin >> name;
+
+    // map에서 이름 찾기
+    auto it = m.find(name);
+
+    if (it != m.end()) {
+        cout << name << "의 전화번호는 " << it->second << " 입니다.\n";
+    }
+    else {
+        cout << "해당 이름은 전화번호부에 존재하지 않습니다.\n";
+    }
+
+    return 0;
 }
-//1번
+//2번
+// int main() {
+//    map<int, int> freq;       // key: 입력 정수, value: 등장 횟수
+//    int n;
+//
+//    cout << "입력할 정수 개수: ";
+//    cin >> n;
+//
+//    cout << n << "개의 정수를 입력하세요:\n";
+//
+//    int x;
+//    for (int i = 0; i < n; i++) {
+//        cin >> x;
+//        freq[x]++;  // 같은 값이 나오면 자동으로 count 증가
+//    }
+//
+//    // 1. map의 멤버를 이용하여 총 입력 정수 개수 구하기
+//    int totalCount = 0;
+//    long long sum = 0;
+//
+//    for (auto& p : freq) {
+//        totalCount += p.second;   // 전체 입력 개수 = 모든 빈도수 합
+//        sum += (long long)p.first * p.second; // 평균 계산을 위한 합
+//    }
+//
+//    // 2. 평균 계산
+//    double avg = (double)sum / totalCount;
+//
+//    // 3. 출력
+//
+//    cout << "총 입력된 정수 개수: " << totalCount << endl;
+//    cout << "평균: " << avg << endl;
+//
+//    cout << "\n정수별 등장 횟수:\n";
+//    for (auto& p : freq) {
+//        cout << p.first << " : " << p.second << "개\n";
+//    }
+//
+//    return 0;
+//}
+////1번
 //int average(const vector<int> &a) {
 //	int all = 0;
 //	for (auto i : a) { all += i; }
@@ -55,14 +113,3 @@ int main() {
 //	cout <<"같은 값 갯수: " << same(v) << endl;
 //	cout<<"평균값은: " << average(v) <<"이다"<< endl;
 //}
-
-// 프로그램 실행: <Ctrl+F5> 또는 [디버그] > [디버깅하지 않고 시작] 메뉴
-// 프로그램 디버그: <F5> 키 또는 [디버그] > [디버깅 시작] 메뉴
-
-// 시작을 위한 팁: 
-//   1. [솔루션 탐색기] 창을 사용하여 파일을 추가/관리합니다.
-//   2. [팀 탐색기] 창을 사용하여 소스 제어에 연결합니다.
-//   3. [출력] 창을 사용하여 빌드 출력 및 기타 메시지를 확인합니다.
-//   4. [오류 목록] 창을 사용하여 오류를 봅니다.
-//   5. [프로젝트] > [새 항목 추가]로 이동하여 새 코드 파일을 만들거나, [프로젝트] > [기존 항목 추가]로 이동하여 기존 코드 파일을 프로젝트에 추가합니다.
-//   6. 나중에 이 프로젝트를 다시 열려면 [파일] > [열기] > [프로젝트]로 이동하고 .sln 파일을 선택합니다.
